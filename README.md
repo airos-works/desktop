@@ -4,6 +4,10 @@
 GitHub app. It is written in [TypeScript](https://www.typescriptlang.org) and
 uses [React](https://reactjs.org/).
 
+> **This fork's `haiku` branch** builds GitHub Desktop for Haiku and air/OS,
+> where it runs on [Aurora](https://github.com/jmgasper/aurora). It is an
+> unofficial port: see [docs/technical/haiku.md](docs/technical/haiku.md).
+
 <picture>
   <source
     srcset="https://user-images.githubusercontent.com/634063/202742848-63fa1488-6254-49b5-af7c-96a6b50ea8af.png"
