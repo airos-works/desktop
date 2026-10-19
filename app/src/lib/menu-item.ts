@@ -49,9 +49,11 @@ export function getPlatformSpecificNameOrSymbolForModifier(
   modifier: string
 ): string {
   switch (modifier.toLowerCase()) {
+    // On Haiku the shortcut key is Command, which is the Alt key, and
+    // Electron's Alt is Haiku's Option key (as Haiku's own menus show them).
     case 'cmdorctrl':
     case 'commandorcontrol':
-      return __DARWIN__ ? '⌘' : 'Ctrl'
+      return __DARWIN__ ? '⌘' : __HAIKU__ ? 'Alt' : 'Ctrl'
 
     case 'ctrl':
     case 'control':
@@ -60,7 +62,7 @@ export function getPlatformSpecificNameOrSymbolForModifier(
     case 'shift':
       return __DARWIN__ ? '⇧' : 'Shift'
     case 'alt':
-      return __DARWIN__ ? '⌥' : 'Alt'
+      return __DARWIN__ ? '⌥' : __HAIKU__ ? 'Opt' : 'Alt'
 
     // Mac only
     case 'cmd':
