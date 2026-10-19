@@ -334,3 +334,9 @@
     --welcome-item-height: 29px;
   }
 }
+
+@include linux-context {
+  #welcome {
+    --welcome-item-height: 29px;
+  }
+}

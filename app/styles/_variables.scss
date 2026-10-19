@@ -556,3 +556,12 @@ $overlay-background-color: rgba(0, 0, 0, 0.4);
 ::backdrop {
   --overlay-background-color: #{$overlay-background-color};
 }
+
+// Haiku builds (body.platform-haiku, see docs/technical/haiku.md): Haiku's
+// web engine resolves the generic font families to its serif face, so its own
+// fonts come first.
+body.platform-haiku {
+  $haiku_emoji_fonts: 'Noto Color Emoji', 'Noto Emoji';
+  --font-family-sans-serif: 'Noto Sans', system-ui, sans-serif, #{$haiku_emoji_fonts};
+  --font-family-monospace: 'Noto Sans Mono', 'DejaVu Sans Mono', monospace, #{$haiku_emoji_fonts};
+}

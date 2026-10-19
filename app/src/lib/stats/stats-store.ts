@@ -672,8 +672,8 @@ export class StatsStore implements IStatsStore {
     this.optOut = storedValue || false
 
     // If the user has set an opt out value but we haven't sent the ping yet,
-    // give it a shot now.
-    if (!getBoolean(HasSentOptInPingKey, false)) {
+    // give it a shot now. Unofficial Haiku builds report nothing to GitHub.
+    if (!__HAIKU__ && !getBoolean(HasSentOptInPingKey, false)) {
       this.sendOptInStatusPing(this.optOut, storedValue)
     }
 
@@ -705,7 +705,8 @@ export class StatsStore implements IStatsStore {
     }
 
     // Never report stats while in dev or test. They could be pretty crazy.
-    if (__DEV__ || process.env.TEST_ENV) {
+    // Unofficial Haiku builds report nothing to GitHub.
+    if (__DEV__ || __HAIKU__ || process.env.TEST_ENV) {
       return
     }
 
@@ -1072,7 +1073,9 @@ export class StatsStore implements IStatsStore {
     setBoolean(StatsOptOutKey, optOut)
 
     if (changed || userViewedPrompt) {
-      await this.sendOptInStatusPing(optOut, previousValue)
+      if (!__HAIKU__) {
+        await this.sendOptInStatusPing(optOut, previousValue)
+      }
     }
   }
 

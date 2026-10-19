@@ -1,0 +1,27 @@
+/* GitHub Desktop's launcher on Haiku: Aurora's aurora-host with the app's
+   name, icon and signature (see Aurora's host/Launcher.h). Multiple launch:
+   a link for the app starts it again, and the first instance takes the link
+   (app.requestSingleInstanceLock). */
+
+resource app_signature "application/x-vnd.github-desktop";
+
+resource app_flags B_MULTIPLE_LAUNCH;
+
+resource app_version {
+	major  = 3,
+	middle = 6,
+	minor  = 7,
+	variety = B_APPV_FINAL,
+	internal = 0,
+	short_info = "GitHub Desktop",
+	long_info = "GitHub Desktop: simple collaboration from your desktop, running on Haiku with Aurora"
+};
+
+/* The links GitHub Desktop opens: its own (x-github-client) and the
+   browser's answer to signing in (x-github-desktop-dev-auth). */
+resource file_types message {
+	"types" = "application/x-vnd.Be.URL.x-github-client",
+	"types" = "application/x-vnd.Be.URL.x-github-desktop-dev-auth"
+};
+
+resource(101, "BEOS:ICON") #'VICN' import "GitHubDesktop.hvif";

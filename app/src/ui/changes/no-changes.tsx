@@ -213,6 +213,8 @@ export class NoChanges extends React.Component<
       return 'Finder'
     } else if (__WIN32__) {
       return 'Explorer'
+    } else if (__HAIKU__) {
+      return 'Tracker'
     }
     return 'your File Manager'
   }

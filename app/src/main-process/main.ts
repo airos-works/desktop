@@ -52,9 +52,14 @@ import {
 import { initializeDesktopNotifications } from './notifications'
 import parseCommandLineArgs from 'minimist'
 import { CLIAction } from '../lib/cli-action'
+import { setupHaikuEnvironment } from '../lib/haiku/environment'
 
 app.setAppLogsPath()
 enableSourceMaps()
+
+if (__HAIKU__) {
+  setupHaikuEnvironment(__dirname)
+}
 
 let mainWindow: AppWindow | null = null
 
@@ -257,18 +262,7 @@ async function handleCommandLineArguments(argv: string[]) {
     // sure that Chromium won't add more switches later on which is why we have
     // to resort to looking through all arguments looking for something that
     // appears to be an app url.
-    const prefixes = Array.from(possibleProtocols, p => `${p}://`)
-    const matchingUrl = argv.find(arg => {
-      if (prefixes.some(p => arg.startsWith(p))) {
-        try {
-          new URL(arg)
-          return true
-        } catch (e) {
-          log.error(`Unable to parse argument as URL: ${arg}`)
-        }
-      }
-      return false
-    })
+    const matchingUrl = findAppURLArgument(argv)
 
     if (matchingUrl) {
       handleAppURL(matchingUrl)
@@ -278,6 +272,17 @@ async function handleCommandLineArguments(argv: string[]) {
     // If --protocol-launcher is present we always want to bail and not
     // risk a smuggled cli switch
     return
+  }
+
+  // Haiku starts the app with the link as its only argument (the app is the
+  // preferred handler of its schemes, see setAsDefaultProtocolClient), and a
+  // second instance passes it on here.
+  if (__HAIKU__) {
+    const matchingUrl = findAppURLArgument(argv)
+    if (matchingUrl) {
+      handleAppURL(matchingUrl)
+      return
+    }
   }
 
   if (typeof args['cli-open'] === 'string') {
@@ -292,6 +297,22 @@ async function handleCommandLineArguments(argv: string[]) {
   }
 
   return
+}
+
+/** The first argument that is a URL of one of the app's protocols. */
+function findAppURLArgument(argv: ReadonlyArray<string>) {
+  const prefixes = Array.from(possibleProtocols, p => `${p}://`)
+  return argv.find(arg => {
+    if (prefixes.some(p => arg.startsWith(p))) {
+      try {
+        new URL(arg)
+        return true
+      } catch (e) {
+        log.error(`Unable to parse argument as URL: ${arg}`)
+      }
+    }
+    return false
+  })
 }
 
 function handleCLIAction(action: CLIAction) {

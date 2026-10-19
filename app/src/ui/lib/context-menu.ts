@@ -23,6 +23,8 @@ export const RevealInFileManagerLabel = __DARWIN__
   ? 'Reveal in Finder'
   : __WIN32__
   ? 'Show in Explorer'
+  : __HAIKU__
+  ? 'Show in Tracker'
   : 'Show in your File Manager'
 
 export const TrashNameLabel = __WIN32__ ? 'Recycle Bin' : 'Trash'

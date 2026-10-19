@@ -7,6 +7,14 @@ const devClientSecret = '22c34d87789a365981ed921352a7b9a8c3f69d54'
 
 const channel = getChannel()
 
+/**
+ * Haiku builds are made on Linux (DESKTOP_TARGET_PLATFORM=haiku) and take the
+ * Linux code paths, plus __HAIKU__ where Haiku differs. They run on Aurora
+ * (https://github.com/jmgasper/aurora), whose Node.js reports "haiku".
+ */
+const isHaikuBuild = process.env.DESKTOP_TARGET_PLATFORM === 'haiku'
+const targetPlatform = isHaikuBuild ? 'linux' : process.platform
+
 const s = JSON.stringify
 
 const optionalStringReplacement = (value: string | undefined) =>
@@ -20,9 +28,10 @@ export function getReplacements() {
     __OAUTH_SECRET__: s(
       process.env.DESKTOP_OAUTH_CLIENT_SECRET || devClientSecret
     ),
-    __DARWIN__: process.platform === 'darwin',
-    __WIN32__: process.platform === 'win32',
-    __LINUX__: process.platform === 'linux',
+    __DARWIN__: targetPlatform === 'darwin',
+    __WIN32__: targetPlatform === 'win32',
+    __LINUX__: targetPlatform === 'linux',
+    __HAIKU__: isHaikuBuild,
     __APP_NAME__: s(productName),
     __APP_VERSION__: s(version),
     __DEV__: isDevBuild,
@@ -36,7 +45,7 @@ export function getReplacements() {
       process.env.DESKTOP_NON_FATAL_ERROR_REPORTING_ENDPOINT
     ),
     __SHA__: s(getSHA()),
-    'process.platform': s(process.platform),
+    'process.platform': s(targetPlatform),
     'process.env.NODE_ENV': s(process.env.NODE_ENV || 'development'),
     'process.env.TEST_ENV': s(process.env.TEST_ENV),
   }

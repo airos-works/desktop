@@ -3,11 +3,12 @@ import { ChildProcess } from 'child_process'
 import * as Darwin from './darwin'
 import * as Win32 from './win32'
 import * as Linux from './linux'
+import * as Haiku from './haiku'
 import { ShellError } from './error'
 import { pathExists } from '../path-exists'
 import { ICustomIntegration } from '../custom-integration'
 
-export type Shell = Darwin.Shell | Win32.Shell | Linux.Shell
+export type Shell = Darwin.Shell | Win32.Shell | Linux.Shell | Haiku.Shell
 
 export type FoundShell<T extends Shell> = {
   readonly shell: T
@@ -27,6 +28,8 @@ export const Default = (function () {
     return Darwin.Default
   } else if (__WIN32__) {
     return Win32.Default
+  } else if (__HAIKU__) {
+    return Haiku.Default
   } else {
     return Linux.Default
   }
@@ -40,6 +43,8 @@ export function parse(label: string): Shell {
     return Darwin.parse(label)
   } else if (__WIN32__) {
     return Win32.parse(label)
+  } else if (__HAIKU__) {
+    return Haiku.parse(label)
   } else if (__LINUX__) {
     return Linux.parse(label)
   }
@@ -62,6 +67,9 @@ export async function getAvailableShells(): Promise<
     return shellCache
   } else if (__WIN32__) {
     shellCache = await Win32.getAvailableShells()
+    return shellCache
+  } else if (__HAIKU__) {
+    shellCache = await Haiku.getAvailableShells()
     return shellCache
   } else if (__LINUX__) {
     shellCache = await Linux.getAvailableShells()
@@ -107,6 +115,8 @@ export async function launchShell(
     cp = Darwin.launch(shell as FoundShell<Darwin.Shell>, path)
   } else if (__WIN32__) {
     cp = Win32.launch(shell as FoundShell<Win32.Shell>, path)
+  } else if (__HAIKU__) {
+    cp = Haiku.launch(shell as FoundShell<Haiku.Shell>, path)
   } else if (__LINUX__) {
     cp = Linux.launch(shell as FoundShell<Linux.Shell>, path)
   }
@@ -144,6 +154,8 @@ export async function launchCustomShell(
     cp = Darwin.launchCustomShell(customShell, path)
   } else if (__WIN32__) {
     cp = Win32.launchCustomShell(customShell, path)
+  } else if (__HAIKU__) {
+    cp = Haiku.launchCustomShell(customShell, path)
   } else if (__LINUX__) {
     cp = Linux.launchCustomShell(customShell, path)
   }

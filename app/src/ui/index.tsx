@@ -351,6 +351,9 @@ dispatcher.registerErrorHandler(discardChangesHandler)
 dispatcher.registerErrorHandler(secretScanningPushProtectionErrorHandler)
 
 document.body.classList.add(`platform-${process.platform}`)
+if (__HAIKU__) {
+  document.body.classList.add('platform-haiku')
+}
 
 dispatcher.initializeAppFocusState()
 

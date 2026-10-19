@@ -1,5 +1,6 @@
 import * as appProxy from '../ui/lib/app-proxy'
 import { URL } from 'url'
+import { nodeFetch } from './haiku/node-fetch'
 
 /** The HTTP methods available. */
 export type HTTPMethod = 'GET' | 'POST' | 'PUT' | 'HEAD' | 'DELETE'
@@ -147,6 +148,12 @@ export function request(
 
   if (reloadCache) {
     options.cache = 'reload' as RequestCache
+  }
+
+  // GitHub's web endpoints (/login/oauth/access_token) answer no CORS
+  // preflight, which Haiku's engine requires of a file: page.
+  if (__HAIKU__ && new URL(url).pathname.startsWith('/login/')) {
+    return nodeFetch(url, options)
   }
 
   return fetch(url, options)

@@ -70,7 +70,11 @@ import { copyCopilotDependency } from './copilot'
 
 const isPublishableBuild = isPublishable()
 const isDevelopmentBuild = getChannel() === 'development'
-const shouldSkipPackaging = process.env.DESKTOP_SKIP_PACKAGE === '1'
+// Haiku builds (docs/technical/haiku.md) stop at `out`: their native helpers
+// are built on Haiku and the package is made there (script/haiku).
+const isHaikuBuild = process.env.DESKTOP_TARGET_PLATFORM === 'haiku'
+const shouldSkipPackaging =
+  process.env.DESKTOP_SKIP_PACKAGE === '1' || isHaikuBuild
 
 const projectRoot = path.join(__dirname, '..')
 const entitlementsSuffix = isDevelopmentBuild ? '-dev' : ''
@@ -286,7 +290,7 @@ function copyEmoji() {
 }
 
 function copyStaticResources() {
-  const dirName = process.platform
+  const dirName = isHaikuBuild ? 'linux' : process.platform
   const platformSpecific = path.join(projectRoot, 'app', 'static', dirName)
   const common = path.join(projectRoot, 'app', 'static', 'common')
   const destination = path.join(outRoot, 'static')
@@ -349,6 +353,11 @@ function copyDependencies() {
 
   console.log('  Installing dependencies via yarn…')
   cp.execSync('yarn install', { cwd: outRoot, env: process.env })
+
+  if (isHaikuBuild) {
+    console.log('  Skipping native helpers (script/haiku builds them)…')
+    return
+  }
 
   console.log('  Copying desktop-askpass-trampoline…')
   const trampolineSource = path.resolve(

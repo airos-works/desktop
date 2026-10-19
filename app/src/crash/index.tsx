@@ -10,6 +10,9 @@ if (!process.env.TEST_ENV) {
 }
 
 document.body.classList.add(`platform-${process.platform}`)
+if (__HAIKU__) {
+  document.body.classList.add('platform-haiku')
+}
 
 const container = document.createElement('div')
 container.id = 'desktop-crash-container'

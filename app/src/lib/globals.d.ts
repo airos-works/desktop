@@ -21,6 +21,12 @@ declare const __WIN32__: boolean
 declare const __LINUX__: boolean
 
 /**
+ * Is the app being built to run on Haiku (through Aurora)? Haiku builds are
+ * Linux builds too: __LINUX__ is also true.
+ */
+declare const __HAIKU__: boolean
+
+/**
  * The product name of the app, this is intended to be a compile-time
  * replacement for app.getName
  * (https://www.electronjs.org/docs/latest/api/app#appgetname)

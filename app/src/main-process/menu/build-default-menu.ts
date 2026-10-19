@@ -362,6 +362,8 @@ export function buildDefaultMenuTemplate({
           ? 'Show in Finder'
           : __WIN32__
           ? 'Show in E&xplorer'
+          : __HAIKU__
+          ? 'Show in Tracker'
           : 'Show in your File Manager',
         id: 'open-working-directory',
         accelerator: 'CmdOrCtrl+Shift+F',
@@ -582,6 +584,8 @@ export function buildDefaultMenuTemplate({
     ? 'Show Logs in Finder'
     : __WIN32__
     ? 'S&how logs in Explorer'
+    : __HAIKU__
+    ? 'S&how logs in Tracker'
     : 'S&how logs in your File Manager'
 
   const showLogsItem: Electron.MenuItemConstructorOptions = {

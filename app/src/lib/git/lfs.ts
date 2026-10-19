@@ -7,8 +7,28 @@ interface ILFSTrackOutput {
   }>
 }
 
+/**
+ * Is Git LFS installed? Haiku's Git comes without it (and HaikuPorts has no
+ * package of it yet), so Haiku builds ask before they install its filters.
+ */
+async function isGitLFSAvailable(): Promise<boolean> {
+  try {
+    const result = await git(['lfs', 'version'], __dirname, 'lfsVersion', {
+      successExitCodes: new Set([0, 1]),
+    })
+    return result.exitCode === 0
+  } catch {
+    return false
+  }
+}
+
 /** Install the global LFS filters. */
 export async function installGlobalLFSFilters(force: boolean): Promise<void> {
+  if (__HAIKU__ && !force && !(await isGitLFSAvailable())) {
+    log.info('Git LFS is not installed: not installing its global filters')
+    return
+  }
+
   const args = ['lfs', 'install', '--skip-repo']
   if (force) {
     args.push('--force')

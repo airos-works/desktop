@@ -9,7 +9,42 @@ export const externals = ['7zip']
 const outputDir = 'out'
 export const replacements = getReplacements()
 
-const commonConfig: webpack.Configuration = {
+const isHaikuBuild = process.env.DESKTOP_TARGET_PLATFORM === 'haiku'
+
+/**
+ * Haiku builds (docs/technical/haiku.md) run on Aurora. Native modules with
+ * no Haiku build become stand-ins, and keytar's binding is a placeholder file
+ * that Aurora's own keytar (Haiku's key store) answers for when it is loaded.
+ */
+const haikuConfig: webpack.Configuration = isHaikuBuild
+  ? {
+      resolve: {
+        alias: {
+          'fs-admin$': path.resolve(__dirname, 'src/lib/haiku/fs-admin'),
+        },
+      },
+      plugins: [
+        new webpack.NormalModuleReplacementPlugin(
+          /^\.\.\/build\/Release\/keytar\.node$/,
+          resource => {
+            resource.request = path.resolve(
+              __dirname,
+              '..',
+              'script',
+              'haiku',
+              'keytar.node'
+            )
+          }
+        ),
+        // Loaded only where notifications are supported, which Haiku is not.
+        new webpack.IgnorePlugin({
+          resourceRegExp: /desktop-notifications\.node$/,
+        }),
+      ],
+    }
+  : {}
+
+const commonConfig: webpack.Configuration = merge(haikuConfig, {
   optimization: {
     emitOnErrors: false,
   },
@@ -50,7 +85,7 @@ const commonConfig: webpack.Configuration = {
     __dirname: false,
     __filename: false,
   },
-}
+})
 
 export const main = merge({}, commonConfig, {
   entry: { main: path.resolve(__dirname, 'src/main-process/main') },
@@ -193,6 +228,17 @@ export const highlighter = merge({}, commonConfig, {
     },
   },
 })
+
+// Haiku's web engine starts a file: page's workers from blobs (Aurora reads
+// the script), where webpack cannot find chunks next to the script: the
+// highlighter is one file there, its modes included.
+if (isHaikuBuild) {
+  highlighter.optimization = { ...highlighter.optimization, splitChunks: false }
+  highlighter.plugins = [
+    ...(highlighter.plugins ?? []),
+    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
+  ]
+}
 
 highlighter.module!.rules = [
   {
