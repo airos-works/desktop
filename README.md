@@ -20,6 +20,19 @@ uses [React](https://reactjs.org/).
   />
 </picture>
 
+<!-- airos-ci:latest-builds:start -->
+## Latest builds
+
+Built automatically by air/OS CI from commit `3002652` on 2026-10-27 ([all files](https://github.com/jmgasper/desktop/releases/tag/latest)).
+
+| Architecture | Package |
+|---|---|
+| arm64 | [github_desktop-3.6.7-2-arm64.hpkg](https://github.com/jmgasper/desktop/releases/download/latest/github_desktop-3.6.7-2-arm64.hpkg) |
+| x86_64 | [github_desktop-3.6.7-2-x86_64.hpkg](https://github.com/jmgasper/desktop/releases/download/latest/github_desktop-3.6.7-2-x86_64.hpkg) |
+
+Install with `pkgman install <file>`, or copy the file into `/boot/system/packages`. Haiku SDK: x86_64 hrev60207-2036-g3d3d333c06, arm64 hrev60207-2036-g3d3d333c06.
+<!-- airos-ci:latest-builds:end -->
+
 ## Where can I get it?
 
 Download the official installer for your operating system:
