@@ -1,0 +1,21 @@
+# air/OS: builds the github_desktop packages (x86_64 and arm64) on every push to the haiku branch
+# and publishes them to the rolling "latest" release; the image builds take them from the package
+# pool. The pipeline lives in jmgasper/airos-ci (apps/build-app-packages.sh, build_github_desktop)
+# and uses the pool's Aurora package for the launcher.
+name: air/OS build
+
+on:
+  push:
+    branches: [haiku]
+  workflow_dispatch:
+
+jobs:
+  airos:
+    uses: jmgasper/airos-ci/.github/workflows/app.yml@main
+    with:
+      app: github_desktop
+      repo-dir: desktop
+      publish-branch: haiku
+      submodules: true
+    permissions:
+      contents: write
