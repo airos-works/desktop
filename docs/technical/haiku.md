@@ -60,9 +60,22 @@ printenvz), lays out the Git links and makes the launcher from Aurora's
 `aurora-host` (`AURORA_HOST_BINARY`, by default the installed aurora
 package's). Raise `REVISION` in it for a new package of the same version.
 
+Or on Linux, for x86_64 or arm64, with an air/OS cross SDK and a Haiku
+build's host tools (this is how air/OS CI builds it, `build_github_desktop`
+in [airos-ci](https://github.com/jmgasper/airos-ci)'s
+`apps/build-app-packages.sh`):
+
+```sh
+AIROS_SDK=/data1/airos/sdk/arm64/env.sh HAIKU_HOST_TOOLS=... HAIKU_MIME_DB=... \
+  AURORA_HOST_BINARY=<aurora package's data/aurora/aurora-host> \
+  script/haiku/cross.sh arm64 dist/haiku <output directory>
+```
+
 Install with `pkgman install github_desktop-*.hpkg`. The package requires
-`aurora >= 0.2`, `cmd:node >= 22` and `cmd:git`; Deskbar's Applications menu
-has GitHub Desktop.
+Aurora, `cmd:node >= 22` and `cmd:git` (`aurora >= 0.3` when cross-built,
+whose launcher is Aurora 0.3's host); Deskbar's Applications menu has GitHub
+Desktop. On arm64 air/OS, Git is air/OS CI's build of it (`git`, with `nano`
+as its editor), since there is no arm64 package repository.
 
 ## Debugging
 
