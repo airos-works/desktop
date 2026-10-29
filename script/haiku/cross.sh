@@ -39,7 +39,7 @@ trap '"$TOOLS/rm_attrs" -rf "$WORK" 2>/dev/null || rm -rf "$WORK"' EXIT
 PKG=$WORK/package
 APP=$PKG/apps/GitHubDesktop
 
-mkdir -p "$APP" "$PKG/data/deskbar/menu/Applications" "$PKG/data/licenses"
+mkdir -p "$APP" "$PKG/data/deskbar/menu/Developer" "$PKG/data/licenses"
 cp -a "$STAGE/app" "$APP/app"
 cp "$STAGE/aurora.json" "$APP/aurora.json"
 
@@ -73,7 +73,7 @@ cp "$HOST_BINARY" "$APP/$NAME"
 # on Haiku xres and mimeset give the file its attributes; here resattr does
 "$TOOLS/resattr/resattr" -O -o "$APP/$NAME" "$WORK/launcher.rsrc"
 (cd "$PKG" && "$TOOLS/mimeset" --all -f --mimedb "$MIMEDB" "apps/GitHubDesktop/$NAME")
-ln -s "../../../../apps/GitHubDesktop/$NAME" "$PKG/data/deskbar/menu/Applications/$NAME"
+ln -s "../../../../apps/GitHubDesktop/$NAME" "$PKG/data/deskbar/menu/Developer/$NAME"
 cp "$STAGE/LICENSE" "$PKG/data/licenses/GitHub Desktop"
 
 cat > "$PKG/.PackageInfo" <<INFO

@@ -11,7 +11,7 @@ OUT=${1:?output directory}
 VERSION=$(cat "$STAGE/VERSION")
 # The package's revision: raise it for a new package of the same version
 # (pkgman does not replace an installed package with an equal version).
-REVISION=2
+REVISION=3
 ARCH=$(uname -m)
 HOST_BINARY=${AURORA_HOST_BINARY:-/boot/system/data/aurora/aurora-host}
 NAME="GitHub Desktop"
@@ -20,7 +20,7 @@ trap 'rm -rf "$WORK"' EXIT
 PKG=$WORK/package
 APP=$PKG/apps/GitHubDesktop
 
-mkdir -p "$APP" "$PKG/data/deskbar/menu/Applications" "$PKG/data/licenses"
+mkdir -p "$APP" "$PKG/data/deskbar/menu/Developer" "$PKG/data/licenses"
 cp -a "$STAGE/app" "$APP/app"
 cp "$STAGE/aurora.json" "$APP/aurora.json"
 
@@ -53,7 +53,7 @@ strip --strip-debug "$APP/$NAME"
 rc -I "$STAGE" -o "$WORK/launcher.rsrc" "$STAGE/GitHubDesktop.rdef"
 xres -o "$APP/$NAME" "$WORK/launcher.rsrc"
 mimeset -f "$APP/$NAME"
-ln -s "../../../../apps/GitHubDesktop/$NAME" "$PKG/data/deskbar/menu/Applications/$NAME"
+ln -s "../../../../apps/GitHubDesktop/$NAME" "$PKG/data/deskbar/menu/Developer/$NAME"
 cp "$STAGE/LICENSE" "$PKG/data/licenses/GitHub Desktop"
 
 cat > "$PKG/.PackageInfo" <<INFO

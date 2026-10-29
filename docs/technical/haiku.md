@@ -73,7 +73,7 @@ AIROS_SDK=/data1/airos/sdk/arm64/env.sh HAIKU_HOST_TOOLS=... HAIKU_MIME_DB=... \
 
 Install with `pkgman install github_desktop-*.hpkg`. The package requires
 Aurora, `cmd:node >= 22` and `cmd:git` (`aurora >= 0.3` when cross-built,
-whose launcher is Aurora 0.3's host); Deskbar's Applications menu has GitHub
+whose launcher is Aurora 0.3's host); Deskbar's Developer menu has GitHub
 Desktop. On arm64 air/OS, Git is air/OS CI's build of it (`git`, with `nano`
 as its editor), since there is no arm64 package repository.
 
